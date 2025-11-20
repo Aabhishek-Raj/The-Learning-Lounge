@@ -1,10 +1,9 @@
-
 import { faker } from "@faker-js/faker";
 import { db, genId } from "@repo/db";
 import { JobData, JobType } from "@repo/queue";
 
 export const runGeneratePosts = async (
-  data: JobData[JobType.GeneratePosts]
+  data: JobData[JobType.GeneratePosts],
 ) => {
   const { count } = data;
 
@@ -37,6 +36,6 @@ export const runGeneratePosts = async (
           },
         },
       });
-    })
+    }),
   );
 };

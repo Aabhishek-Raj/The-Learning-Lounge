@@ -1,4 +1,3 @@
-
 import { JobType, QUEUE_NAME, redis } from "@repo/queue";
 import { Worker } from "bullmq";
 import { runGeneratePosts } from "./jobs/generate-posts";
@@ -20,5 +19,5 @@ new Worker(
     await runner(job.data);
     console.log(`[${job.id}] ${job.name} - Completed`);
   },
-  { connection: redis }
+  { connection: redis },
 );

@@ -7,12 +7,15 @@ This is a monorepo project created with create-k4.
 To boot up the project for the first time:
 
 1. Start the development environment:
+
    ```
    pnpm dev
    ```
+
    This command will start Docker containers and all the apps.
 
 2. Once Docker is up, create the initial migration and migrate the database:
+
    ```
    pnpm db:init
    ```

@@ -1,4 +1,3 @@
-
 import { generatePosts } from "@/actions";
 import { db } from "@repo/db";
 
