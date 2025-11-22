@@ -2,7 +2,7 @@
   "name": "@repo/docker-dev",
   "private": true,
   "scripts": {
-    "dev": "docker compose up",
+    "dev": "echo 'Skipping docker compose for local dev'",
     "db:reset": "docker compose rm --force --stop postgres && docker compose up -d"
   },
   "devDependencies": {

@@ -1,6 +1,9 @@
 # LearningLounge
 
-This is a monorepo project created with create-k4.
+Structured learning meets real-time community.
+Stop studying alone. TutorTalk connects high-quality, step-by-step tutorials with the power of a live, Discord-style chat environment. Master any subject with lessons, quizzes, and instant peer support.
+
+This is a monorepo project.
 
 ## Getting Started
 
@@ -50,6 +53,12 @@ create-k4 app <name> [--next | --node]
 ```
 
 This will create a new app in the `apps/` directory with the necessary configuration.
+
+## Installing a dependency in a specific workspace (package)
+
+npm - npm install <package-name> -w=<workspace-name>
+Yarn - yarn workspace <workspace-name> add <package-name>
+pnpm - pnpm add <package-name> --filter <workspace-name>
 
 ## Learn More
 
