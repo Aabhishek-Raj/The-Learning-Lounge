@@ -1,0 +1,311 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Profile {
+  id String @id @default(uuid())
+  userId String @unique
+  name String
+  imageUrl String @db.Text
+  email String @unique
+  password String
+
+  servers Server[]
+  members Member[]
+  channels Channel[]
+  refreshTokens RefreshToken[]
+  sessions Session[]
+  courses Course[]
+  enrollments Enrollment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RefreshToken {
+  id            String     @id @default(uuid())
+  token         String     @unique @db.VarChar(255)
+
+  profileId     String
+  profile       Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([profileId])
+}
+
+model Session {
+  id          String   @id @default(uuid())
+  device      String?
+  userAgent   String?
+  ip          String?
+
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+}
+
+
+model Course {
+  id String @id @default(uuid())
+  title String
+  description String
+  thumbnail   String?  @db.Text
+  price       Float    @default(0)
+  category    String?
+  status String // e.g., "Draft", "Published", "Archived"
+
+  tutorId String
+  profile Profile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+
+  enrollments Enrollment[]
+  modules     CourseModule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tutorId])
+}
+
+model CourseModule {
+  id       String   @id @default(uuid())
+  title    String
+  order    Int
+
+  courseId String
+  course   Course   @relation(fields: [courseId], references: [id])
+
+  lessons  Lesson[]
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  title       String
+  content     String   @db.Text
+  videoUrl    String?  @db.Text
+  order       Int
+
+  moduleId    String
+  module      CourseModule @relation(fields: [moduleId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Enrollment {
+  userId         String
+  profile        Profile     @relation(fields: [userId], references: [id])
+
+  enrolledAt     DateTime @default(now())
+  completionDate DateTime?
+
+  courseId       String
+  course         Course   @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId]) // Composite Primary Key
+}
+
+model Server {
+  id String @id @default(uuid())
+  name String
+  imageUrl String @db.Text
+  inviteCode String @unique
+
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  members Member[]
+  channels Channel[]
+  serverRoles ServerRole[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+}
+
+enum MemberRole {
+  TUTOR
+  MODERATOR
+  STUDENT
+}
+
+model ServerRole {
+  id       String @id @default(uuid())
+  name     String
+  color    String?
+  position Int
+
+  serverId String
+  server   Server @relation(fields: [serverId], references: [id])
+
+  members  Member[]
+
+  @@index([serverId])
+}
+
+
+model Member {
+  id String @id @default(uuid())
+  roleId    String?
+  role      ServerRole? @relation(fields: [roleId], references: [id])
+
+  systemRole  MemberRole @default(STUDENT)
+
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  serverId String
+  server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+  directMessages DirectMessage[]
+  conversationsInitiated Conversation[] @relation("MemberOne")
+  conversationsReceived Conversation[] @relation("MemberTwo")
+  reactions MessageReaction[]
+
+  joinedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@index([serverId])
+}
+
+enum ChannelType {
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+model Channel {
+  id String @id @default(uuid())
+  name String
+  type ChannelType @default(TEXT)
+
+  serverId String
+  server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+  threads Thread[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@index([serverId])
+}
+
+model Conversation {
+  id String @id @default(uuid())
+
+  memberOneId String
+  memberOne Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+
+  memberTwoId String
+  memberTwo Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+
+  directMessages DirectMessage[]
+
+  @@index([memberOneId])
+  @@index([memberTwoId])
+
+  @@unique([memberOneId, memberTwoId])
+}
+
+model Message {
+  id String @id @default(uuid())
+  content String @db.Text
+  fileUrl String? @db.Text
+  deleted Boolean @default(false)
+
+  memberId String
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  channelId String
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  threadId String
+  thread Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  reactions MessageReaction[]
+  attachments MessageAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@index([channelId])
+  @@index([memberId])
+  @@index([threadId])
+}
+
+model DirectMessage {
+  id String @id @default(uuid())
+  content String @db.Text
+  fileUrl String? @db.Text
+  deleted Boolean @default(false)
+
+  memberId String
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  conversationId String
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Thread {
+  id          String    @id @default(uuid())
+  title       String?
+  
+  channelId   String
+  channel     Channel @relation(fields: [channelId], references: [id])
+
+  messages    Message[]
+
+  createdAt   DateTime @default(now())
+}
+
+model MessageReaction {
+  id         String   @id @default(uuid())
+  emoji      String
+
+  messageId  String
+  message    Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  memberId   String
+  member     Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, memberId, emoji])
+}
+
+model MessageAttachment {
+  id        String @id @default(uuid())
+  fileUrl   String @db.Text
+  type      String // image, pdf, video
+
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
