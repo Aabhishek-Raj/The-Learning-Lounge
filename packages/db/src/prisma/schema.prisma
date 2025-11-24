@@ -35,11 +35,17 @@ model Profile {
 
 model RefreshToken {
   id            String     @id @default(uuid())
-  token         String     @unique @db.VarChar(255)
+  tokenHash         String     @unique @db.VarChar(255)
+  revoked       Boolean  @default(false)
+
+  replacedById  String?  
+  replacedBy    RefreshToken? @relation("TokenRotation", fields: [replacedById], references: [id])
+  replaces      RefreshToken[] @relation("TokenRotation")
 
   profileId     String
   profile       Profile    @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
+  expiresAt     DateTime
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
