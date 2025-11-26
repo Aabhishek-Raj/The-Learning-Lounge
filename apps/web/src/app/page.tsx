@@ -1,40 +1,40 @@
-import { generatePosts } from "@/actions";
-import { db } from "@repo/db";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
 
 export default async function Home() {
-  const posts = await db.post.findMany({
-    select: {
-      id: true,
-      content: true,
-      createdAt: true,
-      user: { select: { id: true, username: true, name: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <form action={generatePosts} className="flex justify-end mb-6">
-        <button
-          type="submit"
-          className="bg-[#4a5a8a] hover:bg-[#3a4a7a] text-[#e6e6eb] font-bold py-2 px-4 rounded-md shadow-lg transition duration-300"
-        >
-          Generate Posts
-        </button>
-      </form>
-
-      {posts.map((post) => (
-        <div
-          key={post.id}
-          className="bg-[#1a1a2a] shadow-lg rounded-md p-4 mb-4 border border-[#3a4a7a]"
-        >
-          <p className="font-bold text-[#a0b0ff]">@{post.user.username}</p>
-          <p className="mt-2 text-[#dcdceb]">{post.content}</p>
-          <p className="mt-2 text-sm text-[#8090c0]">
-            {new Date(post.createdAt).toLocaleString()}
+     <div>
+      <section className="bg-[url('/peoplejump.jpg')] bg-cover bg-center min-h-screen p-4">
+        {/* <ModeToggle /> */}
+        <nav className="flex justify-between items-center ">
+          <div className="sm:flex hidden flex-1"></div>
+          <h3 className="flex-1 text-4xl font-bold text-blue-400">Learning Lounge</h3>
+          <div className="flex flex-1 justify-center gap-3 sm:justify-end">
+            <Link href={'/register'}>
+              <button className="cursor-pointer bg-blue-400 text-white p-3 rounded-4xl font-bold hover:bg-blue-300">
+                Sign Up
+              </button>
+            </Link>
+            <Link href={'/login'}>
+              <button className="cursor-pointer text-white p-3 rounded-4xl font-bold hover:bg-blue-300">
+                Login In
+              </button>
+            </Link>
+          </div>
+        </nav>
+        <article className="ml-40 mt-40 mb-10 max-w-[50%]">
+          <h1 className="text-8xl font-bold text-white">Learn essential career and life skills</h1>
+          <p className="mb-10">
+            Millions of people trust Learning Lounge, the first app of its kind. Learn essential career and life skills — entirely free.
           </p>
-        </div>
-      ))}
-    </div>
+          <Link href={'/register'}>
+            <Button className="cursor-pointer">Start Learning</Button>
+          </Link>
+        </article>
+      </section>
+      <section className="bg-[url('/child.jpg')] bg-cover bg-top min-h-screen p-4 mt-2"></section>
+     </div>
   );
 }
