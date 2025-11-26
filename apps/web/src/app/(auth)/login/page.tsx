@@ -46,7 +46,7 @@ const Login = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await login(values);
-      router.push("/chat");
+      router.push("/dashboard");
     } catch (error) {
       console.log(error);
     }

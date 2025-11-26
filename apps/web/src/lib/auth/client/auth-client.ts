@@ -1,38 +1,49 @@
-import { apiRefresh } from "./auth-api";
-import { tokenStore } from "./token-store";
+// src/lib/auth/client/auth-fetch.ts
+import { apiRefresh, apiLogout } from './auth-api';
+import { tokenStore } from './token-store';
 
-export async function authFetch(
-  url: string,
-  options: RequestInit = {}
-): Promise<Response> {
+let refreshingPromise: Promise<string | null> | null = null;
+
+async function doRefreshOnce(): Promise<string | null> {
+  if (refreshingPromise) return refreshingPromise; // single-flight
+  refreshingPromise = (async () => {
+    try {
+      const newToken = await apiRefresh(); // calls /api/auth/refresh
+      return newToken;
+    } catch (err) {
+      // refresh failed -> make sure to cleanup
+      tokenStore.clear();
+      try { await apiLogout(); } catch(_) {}
+      return null;
+    } finally {
+      // allow subsequent refresh attempts in future
+      refreshingPromise = null;
+    }
+  })();
+  return refreshingPromise;
+}
+
+export async function authFetch(url: string, options: RequestInit = {}) {
   let token = tokenStore.get();
 
-  const makeRequest = async (accessToken: string | null) => {
-    return await fetch(url, {
+  const makeRequest = (t: string | null) =>
+    fetch(url, {
       ...options,
       headers: {
         ...(options.headers || {}),
-        Authorization: accessToken ? `Bearer ${accessToken}` : "",
+        ...(t ? { Authorization: `Bearer ${t}` } : {}),
       },
-      credentials: "include",
+      credentials: 'include',
     });
-  };
 
-  // 1) Try with current token
+  // try original
   let res = await makeRequest(token);
 
-  // 2) If expired, try refresh
-  if (res.status === 401) {
-    const newToken = await apiRefresh();
-
-    if (!newToken) {
-      tokenStore.clear();
-      return res;
-    }
-
+  // if unauthorized -> attempt refresh once, then retry
+  if (res.status === 401 || res.status === 403) {
+    const newToken = await doRefreshOnce();
+    if (!newToken) return res; // refresh failed -> caller handles logout UI
     token = newToken;
-
-    // Retry original request with new token
     res = await makeRequest(newToken);
   }
 

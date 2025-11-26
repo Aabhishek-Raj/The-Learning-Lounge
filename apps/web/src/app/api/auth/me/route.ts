@@ -1,24 +1,15 @@
 // apps/web/app/api/auth/me/route.ts
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { verifyAccessToken } from "@/lib/auth/tokens";
 import { db } from "@repo/db";
+import { getCurrentProfile } from "@/lib/auth";
 
 export async function GET() {
   try {
-    const token = cookies().get("access_token")?.value;
-    if (!token) return NextResponse.json({ user: null });
+    const payload = await getCurrentProfile();
 
-    let payload;
-    try {
-      payload = verifyAccessToken(token);
-    } catch {
-      return NextResponse.json({ user: null });
-    }
-
-    const user = await db.user.findUnique({
-      where: { id: payload.userId },
-      select: { id: true, name: true, email: true, username: true },
+    const user = await db.profile.findUnique({
+      where: { id: payload?.profileId },
+      select: { id: true, name: true, email: true },
     });
 
     return NextResponse.json({ user });

@@ -3,9 +3,9 @@
 import { cookies } from "next/headers";
 
 export async function setAuthCookies(accessToken: string, refreshToken: string, refreshMaxAge = 7 * 24 * 60 * 60) {
-  const c = cookies();
+  const _cookies = await cookies();
   // Access token (short-lived) — httpOnly
-  c.set({
+  _cookies.set({
     name: "access_token",
     value: accessToken,
     httpOnly: true,
@@ -16,7 +16,7 @@ export async function setAuthCookies(accessToken: string, refreshToken: string, 
   });
 
   // Refresh token (longer)
-  c.set({
+  _cookies.set({
     name: "refresh_token",
     value: refreshToken,
     httpOnly: true,
@@ -28,7 +28,17 @@ export async function setAuthCookies(accessToken: string, refreshToken: string, 
 }
 
 export async function clearAuthCookies() {
-  const c = cookies();
-  c.delete("access_token");
-  c.delete("refresh_token");
+  const _cookies = await cookies();
+  _cookies.delete("access_token");
+  _cookies.delete("refresh_token");
+}
+
+export async function getAccessTokenFromCookie() {
+  const _cookies = await cookies()
+  return _cookies.get("access_token")?.value || null;
+}
+
+export async function getRefreshTokenFromCookie() {
+  const _cookies = await cookies()
+  return _cookies.get("refresh_token")?.value || null;
 }

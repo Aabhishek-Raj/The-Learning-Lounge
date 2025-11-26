@@ -1,21 +1,38 @@
-'use server'
+"use server";
 
+import { ProfileEntity } from "@repo/db";
 import jwt from "jsonwebtoken";
+import { JwtUserPayload } from "../shared/types";
 
-const ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET || process.env.ACCESS_TOKEN_SECRET as string;
-const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET || process.env.REFRESH_TOKEN_SECRET as string;
+const ACCESS_SECRET =
+  process.env.ACCESS_TOKEN_SECRET ||
+  (process.env.ACCESS_TOKEN_SECRET as string);
+const REFRESH_SECRET =
+  process.env.REFRESH_TOKEN_SECRET ||
+  (process.env.REFRESH_TOKEN_SECRET as string);
 
 if (!ACCESS_SECRET || !REFRESH_SECRET) {
   throw new Error("Missing token secrets in env");
 }
 
-export async function signAccessToken(payload: object) {
-  // short lived
-  return jwt.sign(payload, ACCESS_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN || "15m" });
+export async function signAccessToken(profile: JwtUserPayload) {
+  const payload = {
+    profileId: profile.profileId,
+    email: profile.email,
+    name: profile.name,
+  };
+
+  return jwt.sign(payload, ACCESS_SECRET, {
+    expiresIn: (process.env.ACCESS_TOKEN_EXPIRES_IN as any) || "15m",
+  });
 }
 
 export async function verifyAccessToken(token: string) {
-  return jwt.verify(token, ACCESS_SECRET) as any;
+  try {
+    return jwt.verify(token, ACCESS_SECRET) as any;
+  } catch (err) {
+    return null;
+  }
 }
 
 export async function signRefreshToken(payload: object) {
@@ -25,5 +42,9 @@ export async function signRefreshToken(payload: object) {
 }
 
 export async function verifyRefreshToken(token: string) {
-  return jwt.verify(token, REFRESH_SECRET) as any;
+  try {
+    return jwt.verify(token, REFRESH_SECRET);
+  } catch (err) {
+    return null;
+  }
 }

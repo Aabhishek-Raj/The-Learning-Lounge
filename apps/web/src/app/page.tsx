@@ -25,10 +25,9 @@ export default async function Home() {
           </div>
         </nav>
         <article className="ml-40 mt-40 mb-10 max-w-[50%]">
-          <h1 className="text-8xl font-bold text-white">Make Your Life Unforgettable</h1>
+          <h1 className="text-8xl font-bold text-white">Learn essential career and life skills</h1>
           <p className="mb-10">
-            Millions of people trust ChatterSpere, the first app of its kind. Plan, track, and share
-            your life — entirely free.
+            Millions of people trust Learning Lounge, the first app of its kind. Learn essential career and life skills — entirely free.
           </p>
           <Link href={'/register'}>
             <Button className="cursor-pointer">Start Learning</Button>

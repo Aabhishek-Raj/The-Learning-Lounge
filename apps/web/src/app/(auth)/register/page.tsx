@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,7 @@ const formSchema = z.object({
 });
 
 const RegisterPage = () => {
+  const router = useRouter()
   const { register } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,7 +49,7 @@ const RegisterPage = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await register(values);
-      redirect("/login");
+      router.push("/login");
     } catch (err) {
       console.log(err);
     }

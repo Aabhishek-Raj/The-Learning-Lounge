@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "build:prisma": "prisma generate",
     "migrate": "prisma migrate",
-    "push": "prisma db push"
+    "push": "prisma db push",
+    "studio": "prisma studio"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

@@ -51,6 +51,7 @@ To add a new app or package to the monorepo, use the following command:
 ```
 create-k4 app <name> [--next | --node]
 ```
+https://github.com/mrwade/create-k4
 
 This will create a new app in the `apps/` directory with the necessary configuration.
 

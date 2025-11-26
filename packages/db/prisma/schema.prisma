@@ -114,8 +114,8 @@ model Lesson {
 }
 
 model Enrollment {
-  userId         String
-  profile        Profile     @relation(fields: [userId], references: [id])
+  profileId         String
+  profile        Profile     @relation(fields: [profileId], references: [id])
 
   enrolledAt     DateTime @default(now())
   completionDate DateTime?
@@ -123,7 +123,7 @@ model Enrollment {
   courseId       String
   course         Course   @relation(fields: [courseId], references: [id])
 
-  @@id([userId, courseId]) // Composite Primary Key
+  @@id([profileId, courseId]) // Composite Primary Key
 }
 
 model Server {

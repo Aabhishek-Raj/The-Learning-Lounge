@@ -1,4 +1,4 @@
-// src/lib/auth/useAuth.ts
+'use client'
 
 import { create } from "zustand";
 import { apiLogin, apiLogout, apiMe, apiRegister } from "./auth-api";
@@ -15,9 +15,7 @@ interface AuthState {
   loading: boolean;
 
   login: (values: { email: string; password: string }) => Promise<void>;
-  register: (
-    values: { email: string; password: string }
-  ) => Promise<void>;
+  register: (values: { email: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   getMe: () => Promise<void>;
   autoLogin: () => Promise<void>;
@@ -32,6 +30,8 @@ export const useAuth = create<AuthState>((set, get) => ({
   // -----------------------
   login: async (values) => {
     const data = await apiLogin(values); // sets token internally
+    // const user = await apiMe();
+    // set({ user, loading: false });
     await get().getMe();
   },
 
@@ -79,5 +79,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     }
 
     await get().getMe();
+    // const user = await apiMe();
+    // set({ user, loading: false });
   },
 }));

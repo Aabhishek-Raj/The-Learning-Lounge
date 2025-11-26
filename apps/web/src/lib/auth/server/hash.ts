@@ -1,4 +1,4 @@
-
+'use server'
 
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -13,6 +13,6 @@ export async function comparePassword(password: string, hash: string) {
 }
 
 /** Refresh token hashing for DB (use sha256) */
-export function hashToken(token: string) {
+export async function hashToken(token: string) {
   return crypto.createHash("sha256").update(token).digest("hex");
 }
