@@ -1,12 +1,11 @@
 'use client'
 
-// import { useModal } from '@/hooks/use-modal-store'
+import { useModal } from '@/store/modalStore'
 import { Plus } from 'lucide-react'
-import { ToolTip } from '../action/Tooltip'
+import { ToolTip } from '../actions/Tooltip'
 
 export const NavigationAction = () => {
-//   const { onOpen } = useModal()
-  const onOpen = (c) => {}
+  const { onOpen } = useModal()
 
   return (
     <div className="group flex items-center">
