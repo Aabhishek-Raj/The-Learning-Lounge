@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db, genId, MemberRole } from '@repo/db'
+import { db, genId } from '@repo/db'
 import { getCurrentProfile } from '@/lib/auth'
+import { MemberRole } from '@repo/db/types'
 
 export async function POST(req: NextRequest) {
   try {

@@ -3,7 +3,7 @@ import { db } from '@repo/db'
 
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ModeToggle } from '@/components/action/ModeToggle'
+import { ModeToggle } from '@/components/actions/ModeToggle'
 import { NavigationAction } from '@/components/navigation/NavigationAction'
 import { NavigationItem } from '@/components/navigation/NavigationItem'
 import { getCurrentProfile } from '@/lib/auth'
@@ -25,7 +25,7 @@ export const NavigationSidebar = async () => {
   })
 
   return (
-    <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
+    <div className="space-y-4 flex flex-col items-center h-full text-primary w-full bg-background-secondary py-3">
       <NavigationAction />
       <Separator className="h-0.5 bg-background rounded-md w-10 mx-auto" />
       <ScrollArea className="flex-1 w-full">
@@ -35,7 +35,7 @@ export const NavigationSidebar = async () => {
           </div>
         ))}
       </ScrollArea>
-      <div className="p-3 mt-auto flex items-center flex-col gap-y-4">
+      <div className="p-3 mt-auto flex items-center flex-col gap-y-4 text-blue-900">
         <ModeToggle />
       </div>
     </div>

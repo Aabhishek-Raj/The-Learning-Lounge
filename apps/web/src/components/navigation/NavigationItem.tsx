@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
-import { ToolTip } from '../action/Tooltip'
+import { ToolTip } from '../actions/Tooltip'
 
 interface NavigationItemProps {
   id: string

@@ -46,7 +46,7 @@ const Login = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await login(values);
-      router.push("/dashboard");
+      router.push("/tutor/courses");
     } catch (error) {
       console.log(error);
     }

@@ -19,8 +19,20 @@
   --background: oklch(0.98 0.01 260);
   --foreground: oklch(0.12 0.06 265);
 
+  /* Sidebar */
+  --background-secondary: oklch(0.95 0.015 260);
+
+  /* Header / Cards / Surfaces */
+  --background-tertiary: oklch(0.92 0.02 260);
+
+  /* Hover */
+  --background-hover: oklch(0.88 0.025 260);
+
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.14 0.05 265);
+
+  --popover: oklch(98% 0.01 255);         /* subtle white with slight cool tint */
+  --popover-foreground: oklch(28% 0.03 250); /* deep cool gray text */
 
   --primary: oklch(0.35 0.07 275);
   --primary-foreground: oklch(0.98 0.01 260);
@@ -43,7 +55,7 @@
 /* ----------------------------------------
    SYSTEM DARK THEME (Automatic)
 -----------------------------------------*/
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --color-background: oklch(0.16 0.06 270);
     --color-foreground: oklch(0.95 0.01 250);
@@ -63,17 +75,29 @@
     --grad-1: linear-gradient(135deg, oklch(0.22 0.06 260) 0%, oklch(0.18 0.05 265) 100%);
     --grad-brand: linear-gradient(135deg, oklch(0.35 0.10 280) 0%, oklch(0.20 0.06 260) 100%);
   }
-}
+} */
 
 /* ----------------------------------------
    DARK THEME
 -----------------------------------------*/
 .dark {
-  --background: oklch(0.16 0.06 270);
+  --background: oklch(0.18 0.02 250);
   --foreground: oklch(0.95 0.01 250);
+
+  /* Sidebar */
+  --background-secondary: oklch(0.15 0.02 250);
+
+  /* Header / Cards / Surfaces */
+  --background-tertiary: oklch(0.22 0.02 255);
+
+  /* Hover */
+  --background-hover: oklch(0.28 0.05 260);
 
   --card: oklch(0.22 0.05 260);
   --card-foreground: oklch(0.96 0.01 250);
+
+  --popover: oklch(23% 0.03 260);        /* charcoal-cool dark popover */
+  --popover-foreground: oklch(92% 0.02 245); /* soft clean white */
 
   --primary: oklch(0.75 0.12 260);
   --primary-foreground: oklch(0.15 0.05 260);
@@ -94,8 +118,13 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-tertiary: var(--background-tertiary);
+  --color-background-hover: var(--background-hover);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
