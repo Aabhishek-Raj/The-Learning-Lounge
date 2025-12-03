@@ -1,11 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* ----------------------------------------
-   LIGHT THEME (DEFAULT)
------------------------------------------*/
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
 :root {
   /* Radii */
   --radius: 0.75rem;
@@ -162,6 +157,9 @@
   .primary-input {
     @apply bg-input text-foreground border border-border shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0;
   }
+  .icon-button {
+    @apply hover:text-primary cursor-pointer
+  }
 }
 
 
@@ -180,5 +178,8 @@
   .card-premium {
     background: var(--grad-1);
     box-shadow: var(--shadow-elegant);
+  }
+  .offscreen {
+
   }
 }

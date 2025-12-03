@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/header/Header";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -6,7 +6,6 @@ const Teaching = () => {
   return (
     <div>
       <section className="bg-[url('/teacheronboard.jpg')] bg-cover bg-center min-h-screen p-4">
-        <Header />
         <article className="ml-40 mt-40 mb-10 max-w-[50%]">
           <h1 className="text-8xl font-bold text-background">Come teach with us</h1>
           <p className="mb-10">

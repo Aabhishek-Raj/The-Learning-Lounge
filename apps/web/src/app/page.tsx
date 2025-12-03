@@ -7,23 +7,6 @@ export default async function Home() {
   return (
      <div>
       <section className="bg-[url('/peoplejump.jpg')] bg-cover bg-center min-h-screen p-4">
-        {/* <ModeToggle /> */}
-        <nav className="flex justify-between items-center ">
-          <div className="sm:flex hidden flex-1"></div>
-          <h3 className="flex-1 text-4xl font-bold text-blue-400">Learning Lounge</h3>
-          <div className="flex flex-1 justify-center gap-3 sm:justify-end">
-            <Link href={'/register'}>
-              <button className="cursor-pointer bg-blue-400 text-foreground p-3 rounded-4xl font-bold hover:bg-blue-300">
-                Sign Up
-              </button>
-            </Link>
-            <Link href={'/login'}>
-              <button className="cursor-pointer text-white p-3 rounded-4xl font-bold hover:bg-blue-300">
-                Login In
-              </button>
-            </Link>
-          </div>
-        </nav>
         <article className="ml-40 mt-40 mb-10 max-w-[50%]">
           <h1 className="text-8xl font-bold text-white">Learn essential career and life skills</h1>
           <p className="mb-10">

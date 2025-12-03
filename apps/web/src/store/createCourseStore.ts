@@ -10,7 +10,7 @@ interface CourseCreateState {
   isInitialized: boolean
 
   setStep: (s: number) => void
-  setField: (key: string, value: any) => void
+  setField: (key: string, value: string | null) => void
   markInitialized: () => void
 }
 
@@ -24,6 +24,6 @@ export const useCourseCreate = create<CourseCreateState>((set) => ({
   isInitialized: false,
 
   setStep: (step) => set({ step }),
-  setField: (key, value) => set({ [key]: value } as any),
+  setField: (key, value) => set({ [key]: value }),
   markInitialized: () => set({ isInitialized: true }),
 }))

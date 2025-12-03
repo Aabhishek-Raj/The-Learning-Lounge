@@ -1,14 +1,18 @@
 "use client"
 import { useRouter } from "next/navigation"
+import { JSX, use, useEffect } from "react"
+import z from "zod"
 
-import { Button } from "@/components/ui/button"
 import Step1Title from "@/components/course-create/Step1Title"
 import Step2Category from "@/components/course-create/Step2Category"
 import Step3Type from "@/components/course-create/Step3Type"
 import Step4Description from "@/components/course-create/Step4Description"
+
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
 import { useCourseCreate } from "@/store/createCourseStore"
-import { JSX, use, useEffect } from "react"
-import StepProgress from "@/components/course-create/StepProgress"
+import { authFetch } from "@/lib/auth"
+import { createCourseSchema } from "@/schema/createCourse.schema"
 
 type CourseStore = ReturnType<typeof useCourseCreate.getState>
 
@@ -55,15 +59,44 @@ export default function CreatePage({
   const requiredField = state[fieldMap[stepInt]]
   const canGoNext = requiredField !== null
 
-  const onFinalSubmit = () => {
-    console.log(state)
+  const onFinalSubmit = async () => {
+    try {
+      const rawData = {
+        title: state.title?.trim(),
+        description: state.description?.trim(),
+        category: state.category?.trim()
+      }
+
+      const parsed = createCourseSchema.safeParse(rawData)
+      if (!parsed.success) {
+        console.log(z.treeifyError(parsed.error))
+        return
+      }
+      const res = await authFetch("/api/courses", {
+        method: "POST",
+        body: JSON.stringify(parsed.data),
+      })
+      if (!res.ok) {
+        const msg = await res.text()
+        throw new Error(`Failed to create course: ${msg}`)
+      }
+      const response = await res.json()
+
+      if (!response?.data?.id) {
+        throw new Error("Invalid API response structure.")
+      }
+      router.push(`/tutor/courses/${response.data.id}`)
+    } catch (error) {
+      console.error("Course creation error:", error)
+    }
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-10">
-      <StepProgress step={stepInt}/>
+    <div className="flex flex-col max-w-2xl min-h-[calc(100vh-84px)] justify-between mx-auto p-6 space-y-10">
       {/* Render step */}
+      <div className="flex-1 py-7">
       {StepComponents[stepInt]}
+      </div>
 
       {/* Navigation buttons */}
       <div className="flex justify-between pt-10">
@@ -85,7 +118,7 @@ export default function CreatePage({
           </Button>
         ) : (
           <Button disabled={!canGoNext} onClick={onFinalSubmit}>
-            Finish
+            Create Course
           </Button>
         )}
       </div>
