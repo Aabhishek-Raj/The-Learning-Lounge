@@ -1,12 +1,21 @@
-import { Menu } from 'lucide-react'
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { Menu } from "lucide-react"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import React from "react"
 
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-// import { ServerSidebar } from './server/ServerSidebar'
-import { Button } from '../ui/button'
-import { NavigationSidebar } from '../navigation/NavigationSidebar'
+import { Button } from "../ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
 
-export const MobileToggle = ({ serverId }: { serverId: string }) => {
+type MobileToggleProps = {
+  children: React.ReactNode
+}
+
+export const MobileToggle = ({ children }: MobileToggleProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -20,10 +29,7 @@ export const MobileToggle = ({ serverId }: { serverId: string }) => {
             <SheetTitle>Navigation bar</SheetTitle>
           </SheetHeader>
         </VisuallyHidden>
-        <div className="w-[72px]">
-          <NavigationSidebar />
-        </div>
-        {/* <ServerSidebar serverId={serverId} /> */}
+        <div className="flex h-full">{children}</div>
       </SheetContent>
     </Sheet>
   )

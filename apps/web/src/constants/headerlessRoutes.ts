@@ -3,4 +3,5 @@ export const headerlessRoutes = [
   "/login",
   "/register",
   "/onboarding",
+  "/chat"
 ];
